@@ -45,9 +45,9 @@ function run(P, N) {
           case 0x10: r = a + b | 0; break;
           case 0x11: r = a - b | 0; break;
           case 0x12: r = Math.imul(a, b); break;
-          case 0x13: if (b === 0) return fin(4); r = a === -2147483648 && b === -1 ? a : (a / b) | 0; break;
-          case 0x14: if (b === 0) return fin(4); r = b === -1 ? 0 : a % b | 0; break;
-          case 0x15: if (b === 0) return fin(4); r = Math.floor((a >>> 0) / (b >>> 0)) | 0; break;
+          case 0x13: if (b === 0) return fin(4); r = a / b | 0; break;
+          case 0x14: if (b === 0) return fin(4); r = a % b | 0; break;
+          case 0x15: if (b === 0) return fin(4); r = (a >>> 0) / (b >>> 0) | 0; break;
           case 0x16: if (b === 0) return fin(4); r = (a >>> 0) % (b >>> 0) | 0; break;
           case 0x18: r = a & b; break;
           case 0x19: r = a | b; break;
@@ -75,8 +75,7 @@ function run(P, N) {
       case 0x34:
         if (cp === 0) return fin(8);
         pc = C[--cp]; break;
-      case 0x40: { const a = S[sp - 1]; if (a < 0 || a > 255) return fin(6); S[sp - 1] = M[a]; break; }
-      case 0x41: { const a = S[sp - 1]; if (a < 0 || a > 255) return fin(6); M[a] = S[sp - 2]; sp -= 2; break; }
+      case 0x40: case 0x41: { const a = S[sp - 1]; if (a < 0 || a > 255) return fin(6); if (op === 0x40) S[sp - 1] = M[a]; else { M[a] = S[sp - 2]; sp -= 2; } break; }
       case 0x50: {
         const t = '' + S[--sp];
         if (ol + t.length > 65536) return fin(11);
